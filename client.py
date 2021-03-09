@@ -15,18 +15,18 @@ sock.connect(('localhost', 9090))
 connection = True
 
 while True:
+
+    print("Прием данных от сервера!")
+    data = sock.recv(1024)
+    print(data.decode())
+
+    # sock.close()
     send = input()
     msg = send
     print("Началась отправка данных серверу!")
     sock.send(msg.encode())
 
-    print("Прием данных от сервера!")
-    data = sock.recv(1024)
-
-    # sock.close()
-
     if data.decode() == "exit":
         sock.close()
         break
 
-    print(data.decode())

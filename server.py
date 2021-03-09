@@ -2,8 +2,8 @@ import errno
 import socket
 import logging
 
-
 logging.basicConfig(format=u'%(levelname)-8s [%(asctime)s] %(message)s', level=logging.DEBUG, filename='logs.log')
+connection_dic = {}
 
 sock = socket.socket()
 
@@ -32,6 +32,12 @@ while True:
 	print("Пользователь подключен!")
 	print(addr)
 	logging.info(f"Пользователь подключен! {addr}")
+	if addr in connection_dic:
+		text = "Приветствую, пользователь " + connection_dic.get(addr)
+		conn.send(text.encode())
+	else:
+		conn.send("Введите имя пользователя дял регистрации на сервере: ".encode())
+		connection_dic[addr[0]] = conn.recv(1024).decode()
 
 	msg = ''
 

@@ -1,1 +1,20 @@
-{"test": {"address": "192.161.0.19", "password": "890121500b5fcba1e6c4b6acb9a526feb71f066d505af25f3ad802d4a7c46b5902c37ec64df241716dfc115e6271b5f35b98762d16209b9cd81a6d863f38cf508679782af354e6e7c85b010d69a604ad24909c664ff1d00449872aae5a61032b"}}
+{
+    "users": {
+        "test1": {
+            "password": "3d309097bbbe6478f483bc80943a1141b2a6eb22c1767bdeb7e33e405bb7c744eb4b221176a3b72a9786b53e4c9cb69dcef32f5ab46f0a71e1a80612f004d9478231dfcf1a33ef44b8e86259cc4b610a2b636e9ac48bb9a0a7dfb80d9f276b68",
+            "address": "127.0.0.1"
+        },
+        "test2": {
+            "password": "513a1fefb9475043ad4ed73ebc9f124d5efc25c96b03dffbc838d045471671e2996865187d4017f3570c3063294557f3fa50f20a2d032112d6423654edb0d5b88d933f4c35fed2adbdd3b7318f8854957101074ab3c1f5bf607a2f064b5fdc63",
+            "address": "192.161.0.19"
+        },
+        "test": {
+            "password": "a504e424d79962b032ff6f6cef0c8107a02bff8b3748d9578a662ba8a4be324d590fb1057f2956bbb83a28c500b58dd74258fd04a05a55e55b6021da137e17d2989a1b1fd97fcbd1608c7547c1fb175d3ce39d8f48ac874cdab390eeb464d133",
+            "address": "127.0.0.1"
+        },
+        "test3": {
+            "password": "c931033403dd820cdc2422ca6e5589e75559b9e8f3deb996acbc557662eef448c33db46b5a52aeb18931d81a5f1d68b6d1ddf2d9904ef42fbb0590d9136d701839c5d8212a766c89fc612ba43e4b52e4933ffbedb9cc5f46442523c1d1fe9cb6",
+            "address": "127.0.0.1"
+        }
+    }
+}

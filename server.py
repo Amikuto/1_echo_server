@@ -28,29 +28,37 @@ def verify_password(stored_password, provided_password):
     return pwdhash == stored_password
 
 
-def add_new_user(address, password, name):
-    info = {
-        name:
-            {
-                "address": address,
-                "password": hash_password(password)
-            }
-    }
+def add_new_user(address, pwd, name):
+    with open("users.json", "r") as f:
+        js_file = json.load(f)
 
-    with open("users.json", "w") as f:
-        json.dump(info, f)
+    target = js_file["users"]
+    user_info = {name: {'password': hash_password(pwd), 'address': address}}
+    target.update(user_info)
+
+    with open("users.json", "w") as file:
+        json.dump(js_file, file, indent=4)
+
+
+def check_if_exist(name):
+    with open("users.json", "r") as f:
+        temp = json.load(f)
+        if temp["users"][name]:
+            return True
+        else:
+            return False
 
 
 def getpass(name):
     with open("users.json", "r") as f:
         temp = json.load(f)
-        passwd = temp[name]["password"]
+        passwd = temp["users"][name]["password"]
     return passwd
 
 
-# add_new_user("192.161.0.19", "123", "damir")
-#
-# print(verify_password(getpass("damir"), "123"))
+# add_new_user("192.161.0.19", hash_password("123"), "test1")
+# add_new_user("192.161.0.19", hash_password("123"), "test2")
+# print(check_if_exist("test1"))
 
 logging.basicConfig(format=u'%(levelname)-8s [%(asctime)s] %(message)s', level=logging.DEBUG, filename='logs.log')
 connection_dic = {}
@@ -78,6 +86,7 @@ print("Начало прослушивания порта!")
 logging.info("Начало прослушивания порта!")
 
 while True:
+    msg = ''
     conn, addr = sock.accept()
     print("Пользователь подключен!")
     print(addr)
@@ -89,31 +98,33 @@ while True:
     conn.send(f"Ваш логин {login}... Теперь введите пароль: ".encode())
     password = conn.recv(1024).decode()
 
-    if verify_password(getpass(login), password):
-        conn.send("Вход успешно выполнен".encode())
-    else:
-        conn.send("Увы, либо пароль неверен, либо такого пользователя нет в базе".encode())
+    flag = False
 
-    # if addr in connection_dic:
-    #     text = "Приветствую, пользователь " + connection_dic.get(addr)
-    #     conn.send(text.encode())
-    # else:
-    #     conn.send("Введите имя пользователя дял регистрации на сервере: ".encode())
-    #     connection_dic[addr[0]] = conn.recv(1024).decode()
+    try:
+        if check_if_exist(login):
+            while not flag:
+                if verify_password(getpass(login), password):
+                    flag = True
+                    conn.send("Вход успешно выполнен. Теперь сервер будет отвечать на ваши сообщения!".encode())
+                    break
+                else:
+                    conn.send("Пароль неверен, введите его заново: ".encode())
+                    password = conn.recv(1024).decode()
+    except KeyError:
+        conn.send("Увы, такого пользователя нет в базе. Добавление по введенному логину и паролю...".encode())
+        add_new_user(addr[0], password, login)
 
-    # msg = ''
+    while True:
+        print("Начался прием данных от клиента!")
+        logging.info("Начался прием данных от клиента!")
+        data = conn.recv(1024)
+        if data.decode() == "exit":
+            print("Завершение работы сервера!")
+            logging.info("Завершение работы сервера!")
+            conn.close()
+            break
+        msg += data.decode()
 
-    # while True:
-    #     print("Начался прием данных от клиента!")
-    #     logging.info("Начался прием данных от клиента!")
-    #     data = conn.recv(1024)
-    #     if data.decode() == "exit":
-    #         print("Завершение работы сервера!")
-    #         logging.info("Завершение работы сервера!")
-    #         conn.close()
-    #         break
-    #     msg += data.decode()
-    #
-    #     print("Началась отправка данных клиенту!")
-    #     logging.info(f"Началась отправка данных клиенту! {data.decode()}")
-    #     conn.send(data)
+        print("Началась отправка данных клиенту!")
+        logging.info(f"Началась отправка данных клиенту! {data.decode()}")
+        conn.send(data)

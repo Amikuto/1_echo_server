@@ -119,8 +119,8 @@ while True:
         logging.info("Начался прием данных от клиента!")
         data = conn.recv(1024)
         if data.decode() == "exit":
-            print("Завершение работы сервера!")
-            logging.info("Завершение работы сервера!")
+            print("Завершение соединения с клиентом!")
+            logging.info("Завершение соединения с клиентом!")
             conn.close()
             break
         msg += data.decode()
